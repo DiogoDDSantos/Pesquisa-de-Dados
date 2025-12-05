@@ -42,3 +42,14 @@ static Arq1Record **idx_by_course = NULL;
 static Arq1Record **idx_by_ies = NULL; 
 static Arq1Record **idx_by_uf = NULL; 
 static Arq1Record **idx_by_group = NULL; 
+
+
+static char detect_delim(const char *line) {
+const char *p = line;
+while (*p) {
+if (*p == ';') return ';';
+if (*p == ',') return ',';
+p++;
+}
+return ';';
+}
