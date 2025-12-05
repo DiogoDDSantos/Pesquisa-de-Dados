@@ -1,24 +1,30 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
+
+
+#define LINEBUF 16384
+#define INITIAL_CAP 1024
 
 typedef struct {
-    int ano;
-    int cod_curso;
-    int cod_ies;
-    int cod_categoria;
-    int cod_org_acad;
-    int cod_grupo;
-    int cod_modalidade;
-    int cod_municipio;
-    int cod_uf;
-    int cod_regiao;
-} DadosCurso;
+int nu_ano;
+long co_curso;
+long co_ies;
+int co_categad;
+int co_orgacad;
+int co_grupo;
+int co_modalidade;
+long co_munic_curso;
+int co_uf_curso;
+int co_regiao_curso;
+char raw_line[1]; 
+} Arq1Record;
+
 
 typedef struct {
-    int ano;
-    int cod_curso;
-    float nota_geral;
-    float nota_especifica;
-} DadosNotas;
-
+int nu_ano;
+long co_curso;
+double nt_ger;
+double nt_ce; 
+} Arq3Record;
