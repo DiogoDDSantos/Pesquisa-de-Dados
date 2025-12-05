@@ -45,11 +45,56 @@ static Arq1Record **idx_by_group = NULL;
 
 
 static char detect_delim(const char *line) {
-const char *p = line;
-while (*p) {
-if (*p == ';') return ';';
-if (*p == ',') return ',';
-p++;
+  const char *p = line;
+  while (*p) {
+    if (*p == ';') return ';';
+    if (*p == ',') return ',';
+    p++;
 }
-return ';';
+  return ';';
+}
+
+static void load_arq1(const char *filename) {
+  char delim;
+  lineno++;
+  if (lineno == 1) {
+    delim = detect_delim(line);
+    continue;
+  }
+  strcpy(copy, line);
+  delim = detect_delim(copy);
+  p = copy;
+  tok = strtok_r(p, (delim==';')?";":"," , &saveptr);
+  if (!tok) continue;
+  Arq1Record *r = (Arq1Record*) xmalloc(sizeof(Arq1Record));
+  memset(r, 0, sizeof(Arq1Record));
+
+  if (tok) parse_int_token(tok, &r->nu_ano);
+  tok = strtok_r(NULL, (delim==';')?";":",", &saveptr);
+  if (!tok) { free(r); continue; }
+  parse_long_token(tok, &r->co_curso);
+  tok = strtok_r(NULL, (delim==';')?";":",", &saveptr); if (tok) parse_long_token(tok, &r->co_ies);
+  tok = strtok_r(NULL, (delim==';')?";":",", &saveptr); if (tok) parse_int_token(tok, &r->co_categad);
+  tok = strtok_r(NULL, (delim==';')?";":",", &saveptr); if (tok) parse_int_token(tok, &r->co_orgacad);
+  tok = strtok_r(NULL, (delim==';')?";":",", &saveptr); if (tok) parse_int_token(tok, &r->co_grupo);
+  tok = strtok_r(NULL, (delim==';')?";":",", &saveptr); if (tok) parse_int_token(tok, &r->co_modalidade);
+  tok = strtok_r(NULL, (delim==';')?";":",", &saveptr); if (tok) parse_long_token(tok, &r->co_munic_curso);
+  tok = strtok_r(NULL, (delim==';')?";":",", &saveptr); if (tok) parse_int_token(tok, &r->co_uf_curso);
+  tok = strtok_r(NULL, (delim==';')?";":",", &saveptr); if (tok) parse_int_token(tok, &r->co_regiao_curso);
+  add_arq1(r);
+}
+  fclose(f);
+  idx_by_course = (Arq1Record**) malloc(arq1_count * sizeof(Arq1Record*));
+  idx_by_ies = (Arq1Record**) malloc(arq1_count * sizeof(Arq1Record*));
+  idx_by_uf = (Arq1Record**) malloc(arq1_count * sizeof(Arq1Record*));
+  idx_by_group = (Arq1Record**) malloc(arq1_count * sizeof(Arq1Record*));
+{
+  size_t i;
+  for (i=0;i<arq1_count;i++) {
+  idx_by_course[i] = arq1[i];
+  idx_by_ies[i] = arq1[i];
+  idx_by_uf[i] = arq1[i];
+  idx_by_group[i] = arq1[i];
+    }
+  }
 }
